@@ -57,3 +57,19 @@
 验收流程：用户审阅明确任务 → 保存并批准计划 → 独立 worktree → 首次真实执行 → 同任务原生会话反馈 → 查看 Diff → 执行 Node 测试 → 展示结果供用户判断，再决定是否人工接受。禁止把成功回复直接当作测试通过；必须比较任务和会话归属、检查退出结果及当前快照，确认原示例源码和基线未改变。
 
 调用边界待用户明确授权：最多两轮真实 Codex 执行（首次 + 一次反馈），不自动重试、不新增任务或扩展修改范围。会消耗 Codex 账号额度，不声称已有金额硬上限。若失败、超时或结果未知，保留事实并停下核查；不为了凑成功继续调用。推送、公开、真实私人仓库操作不包含在此授权内。
+
+## P4 真实验收首次尝试：在模型任务开始前被权限校验阻塞
+
+用户明确授权最多首次执行和反馈两轮、不自动重试。2026-10-12 已通过真实 HTTP 保存计划、独立批准、关联任务并准备固定基线 worktree；提交了 1 次应用运行请求。该 Run 结束为 needs_recovery / result_unknown，没有保存原生会话或 nativeTurnId，没有进入反馈轮次，也没有接受成果。不能记录为真实模型主线通过。
+
+直接阻塞点与对照证据：
+
+- 本机 Codex CLI 0.154.0 的元数据探测只发送 initialize、model/list、thread/start，**不发送 turn/start**。普通命令环境下重复返回 approvalPolicy=never、cwd 匹配，但 sandbox.type=readOnly；适配器在 onSession/startTurn 前严格要求 workspaceWrite，因此拒绝继续。
+- 对相同元数据探测申请平台 require_escalated 审批后，返回 sandbox.type=workspaceWrite；未修改 Codex 全局配置，也未放宽产品的权限校验。这将直接阻塞定位到启动权限环境差异，真实任务仍未在该环境重验。
+- model/list 的默认配置为 gpt-6-astra，仅是服务通告/线程配置，不是物理模型运行证据。没有把这次启动请求或元数据探测计作成功模型轮次。
+- 用后端实际 Git helper 复核：源仓库和独立 worktree 状态均干净，HEAD 均仍为 0f7269241dacb4b29c16f595d1c4e05005e15293。早先使用协议样例 helper（强制 core.autocrlf=false）看到的四文件变化全部是换行差异；该 helper 与后端的 Git 配置不同，不应据此声称模型修改了其他文件。
+- 未清除或改写旧 Run 的未知状态。旧任务缺少可证明会话，既定门禁禁止反馈；继续应重新明确授权，在全新的隔离样例中开始一次验收，保留旧证据。
+
+本轮新增的公开代码仅是回归覆盖：peer 支持返回 readOnly，并在首次及续接两条测试路径确认适配器在暴露会话/模型/轮次回调前拒绝。实际后端运行逻辑未修改。验证：node --test tests/backend-adapter.test.ts，5/5 通过；strict 类型检查 59 文件通过；git diff --check 通过。没有重复全套测试。
+
+私有详细报告位于 .agentdesk/release-demo/ 的 real-report.json、git-followup.json 与 metadata-probe.json，原任务与数据库保留。下一步的新验收仍限同一标题整理需求、最多两轮真实调用、无自动重试；启动时需要平台审核通过的执行环境。公开发布、许可证和人工接受依然没有完成。

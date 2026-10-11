@@ -11,7 +11,7 @@ createInterface({ input: process.stdin }).on('line', (line) => {
   const threadResult = () => ({ thread: { id: m.params.threadId || 'thread-1' }, ...(process.argv.includes('--missing-model') ? {} : { model: process.argv.includes('--different-model') ? 'fixture-returned' : m.params.model || 'fixture-default' }),
     ...(process.argv.includes('--missing-cwd') ? {} : { cwd: process.argv.includes('--wrong-cwd') ? m.params.cwd + '/other' : m.params.cwd }),
     ...(process.argv.includes('--missing-approval') ? {} : { approvalPolicy: process.argv.includes('--wrong-approval') ? 'on-request' : m.params.approvalPolicy }),
-    ...(process.argv.includes('--missing-sandbox') ? {} : { sandbox: { type: process.argv.includes('--wrong-sandbox') ? 'dangerFullAccess' : 'workspaceWrite' } }) });
+    ...(process.argv.includes('--missing-sandbox') ? {} : { sandbox: { type: process.argv.includes('--readonly-sandbox') ? 'readOnly' : process.argv.includes('--wrong-sandbox') ? 'dangerFullAccess' : 'workspaceWrite' } }) });
   if (m.method === 'thread/start') send(initialized ? { id: m.id, result: threadResult() } : { id: m.id, error: { code: -32000, message: 'not initialized' } });
   if (m.method === 'thread/resume') send({ id: m.id, result: threadResult() });
   if (m.method === 'turn/start') {

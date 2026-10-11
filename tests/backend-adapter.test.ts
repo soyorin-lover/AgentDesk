@@ -5,7 +5,7 @@ import { CodexAdapter } from '../src/backend/adapter.ts';
 
 const peer = fileURLToPath(new URL('./fixtures/peer.mjs', import.meta.url));
 test('adapter rejects missing or mismatched thread workspace and policies before exposing session or turn', async () => {
-  for (const sessionId of [undefined, 'known-thread']) for (const flag of ['--missing-cwd', '--wrong-cwd', '--missing-approval', '--wrong-approval', '--missing-sandbox', '--wrong-sandbox']) {
+  for (const sessionId of [undefined, 'known-thread']) for (const flag of ['--missing-cwd', '--wrong-cwd', '--missing-approval', '--wrong-approval', '--missing-sandbox', '--wrong-sandbox', '--readonly-sandbox']) {
     const callbacks: string[] = [];
     const adapter = new CodexAdapter({ binary: process.execPath, args: [peer, flag] });
     const owned: { execution?: Awaited<ReturnType<CodexAdapter['start']>> } = {};
