@@ -73,3 +73,21 @@
 本轮新增的公开代码仅是回归覆盖：peer 支持返回 readOnly，并在首次及续接两条测试路径确认适配器在暴露会话/模型/轮次回调前拒绝。实际后端运行逻辑未修改。验证：node --test tests/backend-adapter.test.ts，5/5 通过；strict 类型检查 59 文件通过；git diff --check 通过。没有重复全套测试。
 
 私有详细报告位于 .agentdesk/release-demo/ 的 real-report.json、git-followup.json 与 metadata-probe.json，原任务与数据库保留。下一步的新验收仍限同一标题整理需求、最多两轮真实调用、无自动重试；启动时需要平台审核通过的执行环境。公开发布、许可证和人工接受依然没有完成。
+
+## P4 第二次隔离验收：权限通过，默认上游断流导致未知
+
+用户再次授权了新隔离样例的最多首次与反馈两轮。此次在经平台审核的执行环境中新建独立源仓库、数据库与 worktree，完整通过保存计划、批准、关联、准备；源基线为 24d21ceebb4a5df9e7df672f48c5010b5eaa12bf，上次未知记录未改写或复用。
+
+结果与边界：
+
+- 提交 1 次应用运行请求，Codex 保存原生会话及 nativeTurnId，Run 实际进入 executing。线程配置返回 gpt-6-astra，仍没有物理实际模型证据。
+- 当前使用 transport=default。持久事件出现 4 条 responseStreamDisconnected 和 1 条其他网络/上游诊断；它们属于同一 turn。应用没有重发执行请求，但 Codex CLI 在内部进行了连接重试，因此此前“不自动重试”的口径不能扩展为“CLI/provider 从不重连”。
+- 可见回复仅表示将检查并修改文件，未声称完成。没有文件改动、没有模型运行测试的证据；约 120 秒后执行超时，Run 为 needs_recovery / result_unknown。停止，未发反馈、未接受、未集成。
+- 使用后端实际 Git 配置复核，源仓库与 worktree 均干净，HEAD 均等于原基线。
+- 重开保存的数据库并通过真实浏览器读取任务及历史可见回复；界面显示未知/待恢复、禁止继续执行，页面错误为 0。此浏览器核对未点击执行或接受按钮、未调用模型，自己启动的浏览器和服务均关闭。截图留在本地忽略目录 unknown-workbench.png。
+
+定位进展与准备不足：历史 CODEX-BATCH-01/02-RESULTS 已记录显式 HTTP 上游成功，本次沿用示例的 default，漏核了这一环境条件。该失败说明默认路径在本次环境中断流，尚不能断言 WebSocket、代理或 TLS 的具体根因。当前 HTTP 元数据预检通过 initialize/model-list/thread-start，cwd 与 never/workspaceWrite 均匹配；没有发送 turn/start，故不是新的成功模型验收。
+
+下一次的具体方案已准备：同一标题整理需求，全新隔离样例，使用既有 transport=http。该选项临时选择 OpenAI Responses HTTP provider、关闭 WebSocket 支持，并设置 request_max_retries=0、stream_max_retries=0、stream_idle_timeout_ms=15000；不改全局 Codex 配置。此处 HTTP 指 Codex 的上游连接，本机界面/API 此前也一直是 HTTP。其模型侧效果仍需真实验收，不能将元数据预检当作成功证据。
+
+本轮没有修改产品运行代码，未重复全套测试；记录与私有验收辅助脚本已更新。保留两个未知任务的数据库和证据。当前样例定位见忽略目录 .agentdesk/release-demo-current.json；新的 HTTP 样例准备脚本为 .agentdesk/prepare-http-release-demo.mjs，尚未执行。下一次真实调用仍需用户明确重试授权，不利用剩余轮次数量偷偷换任务或重试。
