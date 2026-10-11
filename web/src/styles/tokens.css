@@ -1,0 +1,113 @@
+/* ─────────────────────────────────────────────────────────────
+   AgentDesk 设计令牌
+   深色专业工具风。信息密度优先，层级靠明度与边框而非阴影堆叠。
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── 色板：中性 ─────────────────────────────────────────── */
+  --bg-canvas: #0e1116; /* 应用底色 */
+  --bg-panel: #141821; /* 主要面板 */
+  --bg-raised: #1a1f2a; /* 卡片 / 悬浮 */
+  --bg-inset: #0a0d12; /* 代码、输入框内凹 */
+  --bg-hover: #1f2531;
+  --bg-active: #252c3a;
+  --bg-selected: #1c2740;
+
+  --border-strong: #333b4b;
+  --border: #262d3a;
+  --border-subtle: #1e2430;
+
+  --text: #e4e8f0;
+  --text-secondary: #99a2b4;
+  --text-muted: #6c7488;
+  --text-faint: #4d5464;
+  --text-on-accent: #ffffff;
+
+  /* ── 色板：语义状态 ─────────────────────────────────────── */
+  /* 运行中 / 处理中 */
+  --st-active: #4a9eff;
+  --st-active-bg: #12273f;
+  --st-active-border: #1f4f80;
+
+  /* 等待用户 / 阻塞 */
+  --st-wait: #e8a33d;
+  --st-wait-bg: #33260f;
+  --st-wait-border: #6b4c17;
+
+  /* 待审查 */
+  --st-review: #a682f5;
+  --st-review-bg: #251c3d;
+  --st-review-border: #4b3a7d;
+
+  /* 成功 / 通过 */
+  --st-ok: #3ecf8e;
+  --st-ok-bg: #102c22;
+  --st-ok-border: #1f6045;
+
+  /* 失败 / 冲突 */
+  --st-bad: #f0564a;
+  --st-bad-bg: #341816;
+  --st-bad-border: #7a2a24;
+
+  /* 中止 / 取消 / 中性 */
+  --st-idle: #8b93a5;
+  --st-idle-bg: #20252f;
+  --st-idle-border: #3a4150;
+
+  /* 强调色（可交互的品牌色） */
+  --accent: #5b8cff;
+  --accent-hover: #7aa2ff;
+  --accent-press: #4a76dd;
+  --accent-bg: #16233d;
+  --accent-border: #2b4a86;
+
+  /* ── 排版 ───────────────────────────────────────────────── */
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Microsoft YaHei', 'PingFang SC', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Mono', Consolas, 'SF Mono', Menlo,
+    monospace;
+
+  --fs-2xs: 10px;
+  --fs-xs: 11px;
+  --fs-sm: 12px;
+  --fs-base: 13px;
+  --fs-md: 14px;
+  --fs-lg: 16px;
+  --fs-xl: 19px;
+
+  --lh-tight: 1.3;
+  --lh-body: 1.6;
+  --lh-code: 1.55;
+
+  /* ── 间距（4px 基准） ───────────────────────────────────── */
+  --sp-1: 2px;
+  --sp-2: 4px;
+  --sp-3: 6px;
+  --sp-4: 8px;
+  --sp-5: 12px;
+  --sp-6: 16px;
+  --sp-7: 20px;
+  --sp-8: 24px;
+  --sp-9: 32px;
+
+  /* ── 圆角与层级 ─────────────────────────────────────────── */
+  --r-sm: 3px;
+  --r-md: 5px;
+  --r-lg: 8px;
+  --r-full: 999px;
+
+  --z-sticky: 10;
+  --z-overlay: 100;
+  --z-modal: 200;
+  --z-toast: 300;
+
+  /* ── 布局尺寸 ───────────────────────────────────────────── */
+  --w-rail: 296px;
+  --w-pending: 344px;
+  --h-topbar: 48px;
+}
+
+/* 焦点环：单一来源，保证键盘可见性一致 */
+:root {
+  --focus-ring: 0 0 0 2px var(--bg-canvas), 0 0 0 4px var(--accent);
+}

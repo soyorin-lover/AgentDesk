@@ -1,0 +1,19 @@
+{
+  "batch": "B08a / F04",
+  "date": "2026-10-09",
+  "snapshot": ".agentdesk/f04-b08a-backend",
+  "files": [
+    {
+      "path": "src/v2/api/client/api.ts",
+      "sha256": "EAC5D2C41B707CFEC3CEF348C07DE0F96404D1E085D21BAD4912AAF2DE53D89D"
+    },
+    {
+      "path": "src/v2/api/client/execution.ts",
+      "sha256": "8A5207C059409FD1AE3A45C2588D2FEF380282D33420A0D016526969440373AF"
+    },
+    {
+      "path": "src/v2/api/backend/types.ts",
+      "sha256": "A2A87AF620D2547D167DDC509B6727AA0E453ECB241245DD90B239D54C055700"
+    }
+  ]
+}

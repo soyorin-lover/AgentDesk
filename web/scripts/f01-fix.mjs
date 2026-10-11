@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+const root = 'E:/Coding project/Claude/agentdesk-web/src/v2/';
+let s=fs.readFileSync(root+'ConnectionPage.tsx','utf8');
+s=s.replace(/  const session = useLiveSession\(\{[\s\S]*?\n  \}\);\n/,'');
+s=s.replace('<LiveWorkbench live={session} />','{double && <DoubleWorkbench connection={connection} double={double}/>}');
+s=s.replace(/\n      \{session.bootError \? \([\s\S]*?\n      \) : null\}/,'');
+s=s.replace("  const ready = transport !== 'double' || useDouble;",'');
+s += '\nfunction DoubleWorkbench({connection,double}:{connection:Conn;double:DoubleBackend}) {\n const live=useLiveSession({connection,transport:"double",fetch:double.fetch,simulateExternalChange:(id:string)=>double.simulateExternalChange(id)});\n return <LiveWorkbench live={live}/>;\n}\n';
+fs.writeFileSync(root+'ConnectionPage.tsx',s);
+const html=fs.readFileSync('E:/Coding project/AgentDesk/docs/prototypes/workflow-preview.html','utf8');
+const at=html.indexOf('"codex":"<svg');
+console.log(html.slice(at-70,at+60));

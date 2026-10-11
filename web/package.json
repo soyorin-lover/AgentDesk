@@ -1,0 +1,25 @@
+{
+  "name": "agentdesk-web-prototype",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "AgentDesk 前端交互原型（第 1 批）——演示模式，不接入真实 Codex",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test src/v2/live/double.test.ts src/v2/live/presentation.test.ts src/v2/live/scope.test.ts src/v2/projects/state.test.ts src/v2/projects/binding.test.ts src/v2/workflow/state.test.ts src/v2/workflow/layout.test.ts src/v2/live/evidence.test.ts"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^4.4.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.2.0"
+  }
+}

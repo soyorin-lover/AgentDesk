@@ -1,0 +1,31 @@
+import {engineName,engineMark} from '../live/evidence.ts';
+import type {AgentInstance} from '../api/client/api.ts';
+import { useEffect, useRef, useState } from 'react';
+import type { WorkflowView, WorkflowNode } from '../api/backend/types.ts';
+import { I, EngineMark } from '../icons.tsx';
+import { graphLayout,treeRows,type Point } from './layout.ts';
+import { workflowReason } from './state.ts';
+const STATUS:Record<string,string>={draft:'未批准',approved:'已批准 · 待建任务',blocked:'已阻塞',ready:'准备就绪',in_progress:'进行中',needs_recovery:'结果未知 · 待恢复',awaiting_confirmation:'待人工确认',completed:'节点已确认'};
+type Viewport={mode:'graph'|'tree';zoom:number;left:number;top:number;positions:Record<string,Point>};
+const memories=new Map<string,Viewport>();
+export function WorkflowGraph({instances,view,scope,selected,onSelect,onOpen,onDeselect}:{instances:AgentInstance[];view:WorkflowView;scope:string;selected:string|null;onSelect:(id:string)=>void;onOpen?:(id:string)=>void;onDeselect?:()=>void}) {
+  const [viewport,setViewport]=useState<Viewport>(()=>memories.get(scope)??{mode:'graph',zoom:1,left:0,top:0,positions:{}});
+  const scroll=useRef<HTMLDivElement>(null);const drag=useRef<{id:string;x:number;y:number;start:Point;moved:boolean}|null>(null);const skipClick=useRef(false);
+  const update=(next:Viewport)=>{memories.set(scope,next);setViewport(next);};
+  useEffect(()=>{if(scroll.current){scroll.current.scrollLeft=viewport.left;scroll.current.scrollTop=viewport.top;}},[scope,viewport.mode,viewport.left,viewport.top]);
+  const automatic=graphLayout(view.nodes);const points={...automatic,...viewport.positions};
+  const width=Math.max(760,...view.nodes.map(n=>(points[n.id]?.x??0)+300)),height=Math.max(360,...view.nodes.map(n=>(points[n.id]?.y??0)+145));
+  const nodeBody=(n:WorkflowNode)=>{const state=view.nodeStates.find(s=>s.nodeId===n.id),instance=instances.find(i=>i.id===n.agentInstanceId),tool=engineName(instance?.engineId);
+    return <><strong>{n.name}</strong><span className="workflow-node__meta"><EngineMark mark={engineMark(instance?.engineId)}/>{instance?.name??(n.agentInstanceId==='preview-claude'?'建议 Claude Code':n.agentInstanceId==='preview-codex'?'建议 Codex':tool)}</span><span className={'workflow-status workflow-status--'+(state?.status??'draft')}>{STATUS[state?.status??'draft']??state?.status}</span>{state?.reason&&<span className="workflow-node__reason">{workflowReason(state.reason)}</span>}</>;};
+  return <div className="workflow-graph">
+    <div className="workflow-toolbar"><div className="tabs" role="tablist" aria-label="流程视图"><button role="tab" aria-selected={viewport.mode==='graph'} onClick={()=>update({...viewport,mode:'graph'})}>依赖图</button><button role="tab" aria-selected={viewport.mode==='tree'} onClick={()=>update({...viewport,mode:'tree'})}>层级树</button></div><span className="meta">实线：执行依赖 · 虚线：父子层级。拖动只调整布局。</span>{viewport.mode==='graph'&&<div className="row"><button className="icon-btn workflow-icon-btn" aria-label="缩小流程图" disabled={viewport.zoom<=.6} onClick={()=>update({...viewport,zoom:Math.max(.6,viewport.zoom-.1)})}><span aria-hidden="true">−</span></button><span className="meta">{Math.round(viewport.zoom*100)}%</span><button className="icon-btn workflow-icon-btn" aria-label="放大流程图" disabled={viewport.zoom>=1.4} onClick={()=>update({...viewport,zoom:Math.min(1.4,viewport.zoom+.1)})}><I n="plus" s={24}/></button><button className="btn" onClick={()=>update({...viewport,zoom:1,positions:{},left:0,top:0})}>重置布局</button></div>}</div>
+    {viewport.mode==='tree'?<div className="workflow-tree" role="tree" aria-label="项目流程层级树">{treeRows(view.nodes).map(({node,depth})=><div key={node.id} className="workflow-tree-row" style={{paddingLeft:Math.min(depth,12)*24}}><button role="treeitem" aria-level={depth+1} aria-selected={selected===node.id} onDoubleClick={()=>onOpen?.(node.id)} onClick={()=>onSelect(node.id)}>{nodeBody(node)}</button><p className="meta">执行依赖：{node.dependencyIds.map(id=>view.nodes.find(n=>n.id===id)?.name??id).join('、')||'无'} · 节点 {node.id}</p></div>)}</div>:
+    <div className="workflow-viewport" tabIndex={0} aria-label="可滚动依赖图；可切换层级树逐项键盘访问" ref={scroll} onScroll={e=>{const el=e.currentTarget;const next={...viewport,left:el.scrollLeft,top:el.scrollTop};memories.set(scope,next);setViewport(next);}}><div style={{width:width*viewport.zoom,height:height*viewport.zoom}}><div className="workflow-canvas" onClick={e=>{if(e.target===e.currentTarget)onDeselect?.();}} style={{width,height,transform:'scale('+viewport.zoom+')',transformOrigin:'top left'}}><svg className="workflow-lines" width={width} height={height} aria-hidden="true"><defs><marker id="flow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="var(--accent)"/></marker></defs>{view.nodes.flatMap(n=>{const end=points[n.id];return [...n.dependencyIds.map(id=>{const start=points[id];return start&&end?<path key={id+'-'+n.id} d={'M'+(start.x+260)+' '+(start.y+52)+' C'+(start.x+285)+' '+(start.y+52)+','+(end.x-25)+' '+(end.y+52)+','+end.x+' '+(end.y+52)} className="workflow-dependency" markerEnd="url(#flow-arrow)"/>:null;}),n.parentId&&points[n.parentId]&&end?<path key={'parent-'+n.id} d={'M'+(points[n.parentId].x+130)+' '+(points[n.parentId].y+104)+' L'+(end.x+130)+' '+end.y} className="workflow-parent"/>:null];})}</svg>
+      {view.nodes.map(n=><button key={n.id} className={'workflow-node'+(selected===n.id?' workflow-node--selected':'')} style={{left:points[n.id].x,top:points[n.id].y}} aria-label={'选择节点 '+n.name} aria-pressed={selected===n.id} onDoubleClick={()=>onOpen?.(n.id)} onClick={()=>{if(skipClick.current){skipClick.current=false;return;}onSelect(n.id);}} onPointerDown={e=>{if(e.button!==0)return;drag.current={id:n.id,x:e.clientX,y:e.clientY,start:points[n.id],moved:false};e.currentTarget.setPointerCapture(e.pointerId);}} onPointerMove={e=>{const d=drag.current;if(!d||d.id!==n.id)return;const dx=(e.clientX-d.x)/viewport.zoom,dy=(e.clientY-d.y)/viewport.zoom;if(Math.abs(dx)+Math.abs(dy)>6)d.moved=true;if(d.moved)update({...viewport,positions:{...viewport.positions,[n.id]:{x:Math.max(12,d.start.x+dx),y:Math.max(12,d.start.y+dy)}}});}} onPointerUp={()=>{skipClick.current=!!drag.current?.moved;drag.current=null;}} onPointerCancel={()=>{drag.current=null;}}>{nodeBody(n)}</button>)}
+    </div></div></div>}
+  </div>;
+}
+
+
+
+

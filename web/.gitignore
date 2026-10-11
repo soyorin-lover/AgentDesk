@@ -1,0 +1,27 @@
+node_modules/
+dist/
+*.local
+.vite/
+
+# Private verified contract/backend snapshots
+.agentdesk/
+
+# Match the delivery repository's private-file boundary
+coverage/
+.env
+.env.*
+!.env.example
+*.local.*
+*.log
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.db
+*.db-shm
+*.db-wal
+*.pem
+*.key
+*.p12
+*.pfx
+.DS_Store
+Thumbs.db

@@ -1,0 +1,18 @@
+# F03 implementation ledger
+
+- Scope and spec: user F03 instruction + published B07 API/results + existing design/roadmap. No B08a/F04.
+- Plan: frozen B07 source/client; state behavior RED/GREEN; full draft editor and impact review; graph/tree and exact approval; task link/create and manual confirmation; owned HTTP/DOM + independent review + final verification.
+- Preflight: workflow version separate from project version, zero valid; immutable receipts followed by GET current workflow. Tree parent and DAG dependencies distinct.
+- Ruling: existing explicit authorization and published design/implementation plan govern; no repeated product interview. Frontend has no Git metadata, continue assigned directory without initial commit. Backend read-only.
+- Client snapshot: all three buffers verified against publication twice before replacement; private ignored copy retained for later B08a concurrency.
+- Implemented: full roles/members/owner/node draft editing and impact review; separate graph/tree layout; exact partial/remaining approvals; explicit task create/link; current acceptance plus separate manual confirmation; historical task navigation.
+- Lifecycle: StrictMode activate/dispose generation isolation, unknown original requests retained, after-write GET gate and cross-project pending navigation. State tests 12 plus layout tests 3; complete suite 72 passed.
+- DOM RED: B workspace.ready completed during initial history catchup, cursor advanced but detail stayed preparing for 45s. Fixed by re-reading detail/checks after history catchup before SSE from advanced cursor. Browser rerun uses original direct GUI wait, no HTTP-ready or reentry workaround.
+- Read-only independent gpt-6.1-sol F03 review: no substantive P1/P2 at first review. Targeted catchup-race review pending.
+- Verification pending: finish real DOM, plain-task regression, fresh final build/test and results document. No publish/push/model calls or main-project mutation.
+- DOM GREEN after catchup fix: all 8 core groups pass, pageerrors 0. B prepare directly reaches start action without navigation or HTTP-ready workaround.
+- Fresh ordinary task GUI regression passes after code freeze; targeted nested dialog unique accessible names/44px/top Escape and unknown-save cross-project original-body/key recovery pass. During ordinary-test development HMR interrupted an earlier pending operation; fresh frozen-source run passed without production behavior change.
+- Accessibility: Dialog now uses React useId for default heading, avoiding duplicate dlg-title across editor/review stack. Review save disabled during fact reads.
+- Keyboard dependency input: removed eager empty-part filtering, which ate typed separators; incomplete references remain local and validation blocks save. Targeted sequential typing proof and external-change/in-progress proof pending.
+- FINAL: core DOM 8 groups, ordinary regression 1 group, targeted DOM 2 groups, external mutation/in-progress 1 group, plus 3-size checkbox layout proof all pass with zero page errors. Original 1200ms fixture could not prove running fact before it ended; second owned 10000ms deterministic fixture proved real in_progress + dependency-blocked reason, then terminal blocked and subsequent start rejection. Original service retained.
+- Final frontend npm test 72/72, typecheck exit0, build exit0/92 modules. Final three fixture scripts node --check exit0. Published B07 three hashes reverified. No pending required work; docs/FRONTEND-F03-RESULTS.md complete. Private machine-specific evidence paths only in ignored .agentdesk/f03-verification.json. Stop at F03, no F04/B08a.
