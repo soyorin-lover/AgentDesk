@@ -64,4 +64,4 @@ npm run serve -- --config .agentdesk/local-backend.json
 - [首次发布范围与验收](docs/release-scope.md)、[核心架构](docs/architecture.md)、[本轮交付验证](docs/delivery-verification.md)。
 - [历史交接](docs/HANDOFF.md) 保留原型过程；其旧路径、测试数量和未来计划应结合当前记录阅读。
 
-不提交令牌、私人配置、运行数据库、原始敏感日志或依赖目录。Git worktree 提供代码隔离，不是安全沙箱。项目代码采用 [MIT 许可证](LICENSE)；第三方图标及依赖保留各自许可，见 [来源与依赖说明](THIRD_PARTY_NOTICES.md)。真实 Codex 验收范围见 [交付记录](docs/delivery-verification.md)。目前未推送或公开发布；用户选择暂不发布，Git 历史中的个人作者邮箱仍待发布前处理。
+不提交令牌、私人配置、运行数据库、原始敏感日志或依赖目录。Git worktree 提供代码隔离，不是安全沙箱。项目代码采用 [MIT 许可证](LICENSE)；第三方图标及依赖保留各自许可，见 [来源与依赖说明](THIRD_PARTY_NOTICES.md)。真实 Codex 验收范围见 [交付记录](docs/delivery-verification.md)。提交作者信息使用 GitHub 隐私邮箱；原始历史备份仅保存在本地忽略目录。
