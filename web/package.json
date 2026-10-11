@@ -9,7 +9,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test src/v2/live/double.test.ts src/v2/live/presentation.test.ts src/v2/live/scope.test.ts src/v2/projects/state.test.ts src/v2/projects/binding.test.ts src/v2/workflow/state.test.ts src/v2/workflow/layout.test.ts src/v2/live/evidence.test.ts"
+    "test": "node --experimental-strip-types --test src/v2/live/double.test.ts src/v2/live/presentation.test.ts src/v2/live/scope.test.ts src/v2/projects/state.test.ts src/v2/projects/binding.test.ts src/v2/workflow/state.test.ts src/v2/workflow/layout.test.ts src/v2/live/evidence.test.ts src/v2/workflow/node-edit.test.ts"
   },
   "dependencies": {
     "react": "^19.1.0",

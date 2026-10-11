@@ -9,6 +9,7 @@
     "typecheck": "node scripts/typecheck.mjs",
     "verify:codex": "node src/verify.ts",
     "serve": "node src/serve.ts",
-    "verify:backend": "node scripts/verify-backend.ts"
+    "verify:backend": "node scripts/verify-backend.ts",
+    "verify:web": "node scripts/verify-web.mjs"
   }
 }

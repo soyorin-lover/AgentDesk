@@ -10,14 +10,16 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const args = process.argv.slice(2);
 function option(name: string) { const i = args.indexOf(name); if (i < 0) return undefined; if (!args[i + 1] || args[i + 1].startsWith('--')) throw Error(`Missing ${name} value`); return args[i + 1]; }
 const f04 = args.includes('--f04');
-const backend = fileURLToPath(new URL(f04?'../.agentdesk/f04-b08a-backend':'../.agentdesk/f03-b07-backend', import.meta.url));
-const snapshotEvidence = JSON.parse(await readFile(join(backend, 'snapshot-evidence.json'), 'utf8'));
-for (const item of snapshotEvidence.files) {
-  const actual = createHash('sha256').update(await readFile(join(backend, item.path))).digest('hex').toUpperCase();
-  if (actual !== item.hash) throw Error('Frozen B07 snapshot mismatch: ' + item.path);
+const backend = resolve(fileURLToPath(new URL('../../', import.meta.url)));
+const files = [];
+for (const path of ['client/api.ts', 'client/execution.ts', 'backend/types.ts']) {
+  const hash = async (file: string) => createHash('sha256').update(await readFile(file)).digest('hex').toUpperCase();
+  const sha256 = await hash(join(backend, 'src', path));
+  if (sha256 !== await hash(join(backend, 'web/src/v2/api', path))) throw Error('Frontend/backend contract mismatch: ' + path);
+  files.push({ path: 'src/' + path, sha256 });
 }
-if (createHash('sha256').update(await readFile(join(backend, 'package.json'))).digest('hex').toUpperCase() !== snapshotEvidence.packageHash) throw Error('Frozen B07 package mismatch');
-const backendSnapshot = { path: backend, ...snapshotEvidence };
+// Compatibility field for existing consumers; this is current source, not a frozen historical snapshot.
+const backendSnapshot = { path: backend, kind: 'current-checkout', files };
 const load = (path: string) => import(pathToFileURL(join(backend, path)).href);
 const { BackendService } = await load('src/backend/service.ts');
 const { startHttp } = await load('src/backend/http.ts');
@@ -42,7 +44,12 @@ const port = Number(option('--port') ?? 0);
 const runDelayMs = Number(option('--run-delay-ms') ?? 1200);
 if (!Number.isInteger(runDelayMs) || runDelayMs < 1200 || runDelayMs > 30000) throw Error('run-delay-ms must be an integer from 1200 to 30000');
 if (!Number.isInteger(port) || port < 0 || port > 65535 || [4317, 4318, 4319, 5311, 5331].includes(port)) throw Error('Use a new port or 0 for dynamic allocation');
-const allowedOrigins = ['http://localhost:5331', 'http://127.0.0.1:5331'];
+const frontendOrigin = option('--frontend-origin');
+if (frontendOrigin) {
+  const url = new URL(frontendOrigin);
+  if (url.protocol !== 'http:' || !['localhost', '127.0.0.1'].includes(url.hostname) || url.origin !== frontendOrigin) throw Error('frontend-origin must be a loopback HTTP origin');
+}
+const allowedOrigins = frontendOrigin ? [frontendOrigin] : ['http://localhost:5331', 'http://127.0.0.1:5331'];
 // This adapter is deliberately local and deterministic. No Codex adapter or SDK is imported.
 const adapter = { ...(f04?{configurationIdentity:'f04-deterministic-v1',configuredModel:'fixture-config'}:{}),async start(context: { input: string; cwd: string; sessionId?: string; onSession(id: string): void; onModel(model: string,source?:string): void; emit(event: { type: string; data: Record<string, unknown> }): void }) {
   const cwd = await realpath(context.cwd);
@@ -97,8 +104,10 @@ async function close() { await http.close(); await service.close(); }
 {
   console.log('F03 fixture API: ' + http.url + '\nConnection file: ' + join(root, 'connection.json') + '\nToken file (not printed): ' + tokenFile + '\nNo model execution; stop this process with Ctrl+C; restart with --reuse ' + JSON.stringify(root));
   let stopping = false;
-  const stop = () => { if (stopping) return; stopping = true; void close().catch(() => { process.exitCode = 1; }); };
+  const stop = () => { if (stopping) return; stopping = true; void close().catch(() => { process.exitCode = 1; }).finally(() => { if (process.connected) process.disconnect(); }); };
   process.on('SIGINT', stop); process.on('SIGTERM', stop);
+  process.on('message', message => { if ((message as { type?: string })?.type === 'shutdown') stop(); });
+  process.on('disconnect', stop);
 }
 
 

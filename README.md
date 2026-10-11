@@ -1,75 +1,65 @@
 # AgentDesk
 
-面向独立开发者的多引擎 Coding Agent 开发工作台，长期至少管理 Codex、Claude Code、DeepSeek Harness；当前只有 Codex 具有真实接入验证证据。
+本机 Coding Agent 工作台原型：把已有 Git 仓库中的任务拆成可批准的计划，在独立 worktree 中执行，查看事件和 Diff，运行检查后人工接受成果。
 
-## 当前阶段
+当前整理目标是 **Windows、本机、单用户、串行、Codex** 首个公开版本。项目由 AI 辅助原型开发而来；从工程化整理开始记录新的阅读、判断、修改与验证，不把历史 AI 报告等同于本轮验收。
 
-2026-10-09 B08a 已发布受信实例/能力查询、固定配置、任务会话归属与逐轮引擎/模型证据，最终 140/140、strict 56 文件、浏览器编译和 CLI 专项通过。见 [B08a API](docs/BACKEND-BATCH-08A-API.md)、[结果/哈希](docs/CODEX-BATCH-08A-RESULTS.md)、[最新交接](docs/BACKEND-HANDOFF.md)。只有 Codex 业务适配、仍全局串行；无证据的物理模型与账号状态 unknown。F03 继续使用冻结 B07；既有服务/配置/运行库未升级，无模型轮次或主仓库提交/推送。停在 B08a，不自动启动 B08b/B08c。下方早期状态保留为历史。
+## 当前能力与边界
 
-2026-10-09 第 7 批流程组织与授权基础已正式发布，最终全套 126/126、严格类型和浏览器编译通过；见 [B07 接口](docs/BACKEND-BATCH-07-API.md) 与 [结果](docs/CODEX-BATCH-07-RESULTS.md)。成员/角色/负责人、树与依赖 DAG、精确修订批准及人工节点确认分别存证；未批准受管任务的直接执行命令被拒绝。旧任务与 B06 兼容，既有服务未升级，无模型调用、提交或推送。B08 未启动。
+- 已有源码：项目与任务、计划修订与批准、固定执行绑定、独立 Git worktree、执行反馈、事件补读、Diff 快照、有界检查与人工接受。
+- 反馈必须续接原任务会话；执行成功、检查通过、接受和集成是不同状态。接受不自动合并代码，也不强制检查通过。
+- Codex 有历史真实调用证据，本轮未重新执行真实模型验收。Claude 有适配和模拟测试，尚无真实模型验收；DeepSeek 为规划。
+- 首次发布不包含完整并行、自动交接、自动集成、桌面安装与真实 AI 策划。Linux 尚未验收。
+- 示例预览、确定性 HTTP 测试环境和真实模型执行有明确区分。
 
-2026-10-09 第 6 批已新增受信多项目执行绑定，任务固定绑定修订和 commit；重绑或源 HEAD 推进不替换历史任务代码，保留原脏源码及全服务串行保护。见 [B06 接口](docs/BACKEND-BATCH-06-API.md)、[结果](docs/CODEX-BATCH-06-RESULTS.md) 与 [最新交接](docs/BACKEND-HANDOFF.md)。既有在线服务未升级，无模型调用、提交或推送。下方早期阶段保留作历史。
+## 本地准备
 
-2026-10-09 第 5 批已新增项目空间持久创建/详情/编辑、已有仓库只读检查与 commit 基线关联。新空间不扩大执行权限，未提交改动不自动进入 worktree。见 [第 5 批接口](docs/BACKEND-BATCH-05-API.md)、[结果](docs/CODEX-BATCH-05-RESULTS.md) 与 [最新剩余路线](docs/PROJECT-REMAINING.md)。首版目标和前端 Codex 分工以 [最新产品决定](docs/PRODUCT-DECISIONS-2026-10-09.md) 为准，下方早期说明为历史。
-
-第 3 批后端已实现可信项目登记、独立任务 Git worktree、多任务串行执行、真实有界检查与过时判断，保留既有事件补读、diff、反馈和人工接受。旧 workspace 模式及数据库继续兼容，新项目模式需独立配置与数据库。使用 Node.js 24.17+ 内置 TypeScript、SQLite 和测试框架，无新增第三方依赖。独立前端连接页仍连接旧服务，正式页面未完成全部联调；代码集成、队列、其他引擎及自动恢复尚未实现。
-
-在 Windows 开发，目标支持 Windows 和 Linux。Codex 负责执行接入、后端和集成；Claude 负责前端设计与实现；DeepSeek 负责范围明确的辅助工作。
-
-## 文档入口
-
-- [最新后端交接](docs/BACKEND-HANDOFF.md)
-- [第 3 批后端范围](docs/CODEX-BATCH-03.md)
-- [第 3 批实施计划](docs/superpowers/plans/2026-10-08-backend-batch-03.md)
-- [第 3 批结果与边界](docs/CODEX-BATCH-03-RESULTS.md)
-- [第 3 批公共接口与 Claude 对接](docs/BACKEND-BATCH-03-API.md)
-
-- [产品范围](docs/PRODUCT.md)
-- [第一批 Codex 接入计划](docs/CODEX-BATCH-01.md)
-- [第二批后端范围建议](docs/CODEX-BATCH-02.md)
-- [通用任务 / 运行 / 事件接口草案](docs/BACKEND-API-DRAFT.md)
-- [本机后端使用说明](docs/BACKEND-USAGE.md)
-- [前端联调 API 客户端](docs/API-CLIENT-USAGE.md)
-- [第二批结果与限制](docs/CODEX-BATCH-02-RESULTS.md)
-- [Claude 前端交接](docs/CLAUDE-HANDOFF.md)
-- [并行协作规则](docs/COLLABORATION.md)
-- [环境验证记录](docs/ENVIRONMENT.md)
-
-## 运行
-
-需要 Git、Node.js 24.17+ 和已登录的 Codex。可先执行 `codex login status`；验证器不读取或复制认证凭据。
+需要 Node.js >=24.17.0、Git。后端运行使用 Node 内置 TypeScript 与 SQLite；前端依赖通过现有锁文件安装。在仓库根目录运行：
 
 ```powershell
-npm test
-# 可使用已安装的 TypeScript；见下文 typecheck 说明
-npm run typecheck
-# 默认使用 Codex 配置的传输；仅验证单会话闭环
-npm run verify:codex -- baseline
-# 本机已验证的 HTTP/SSE 对照模式，仅作用于子进程，不改全局设置
-$env:CODEX_TRANSPORT = 'http'
-npm run verify:codex -- all
+npm --prefix web ci
+npm --prefix web test
+npm --prefix web run build
 ```
 
-Linux shell 对应 `CODEX_TRANSPORT=http npm run verify:codex -- all`；该命令说明不代表 Linux 已实测。
+预览前端：
 
-可选 `CODEX_BIN` 指定可执行文件，`CODEX_MODEL` 从服务器 `model/list` 中选择模型。未指定模型时使用服务器列表标记的默认项，避免继承未列出的旧配置。模型在列表中不保证当前账户可以执行。
+```powershell
+npm --prefix web run dev -- --host 127.0.0.1 --port 5331 --strictPort
+```
 
-阶段参数：`baseline`、`interaction`、`approvals`、`parallel`、`all`（默认）。建议首次顺序执行 `all`。后续阶段重试需先有 baseline 成功证据。Node CLI 退出码 0 表示所选阶段全部通过，1 表示失败，2 表示有未触发或未执行项；npm 可能将非零状态统一报告为 1，应同时读取摘要。
+打开 http://127.0.0.1:5331/#/preview 。预览使用示例，不执行模型。
 
-类型检查使用已有 `typescript` 模块。也可设置 `TYPESCRIPT_PATH` 指向编辑器捆绑的 `typescript.js`，`NODE_TYPES_ROOT` 指向包含 `node` 类型的 `@types` 目录，然后执行 `npm run typecheck`。机器路径仅通过环境变量传入，不提交。未提供编译器时该命令明确退出 2；运行验证器和测试不需要编译器。
+## 无模型浏览器验收
 
-每次运行只创建 `.agentdesk/runs/<唯一标识>/` 下的新示例 Git 仓库，并保存脱敏 `summary.json` 与固定样例内容的 `.diff`。不会对主仓库发起测试改写，也不会清理已有样例。请求/事件日志只在内存处理；摘要不保存原始模型文本、命令输出、stderr 或认证数据。Codex 自身仍按正常机制在其用户目录保存会话，供 `thread/resume` 使用。
+安装上述前端依赖后，在仓库根运行 `npm run verify:web`。此命令启动自己持有的前端和确定性后端，创建临时 Git/SQLite 工作区，运行浏览器交互验证，再关闭自己启动的服务。不会修改用户源码或调用模型。
 
-**真实调用会消耗账户额度。** HTTP 模式针对内置 OpenAI/ChatGPT 登录，用独立 provider ID 临时关闭上游 WebSocket；它不用于自定义网关，也不改变本地 stdio 通信。
+浏览器自动化需要环境中已有 Playwright 和可用浏览器。默认导入 `playwright` 并使用其 Chromium；外部工具可以设置 `PLAYWRIGHT_MODULE_PATH` 为 `playwright/index.mjs` 的绝对路径。Windows 已安装 Edge 时可设置 `PLAYWRIGHT_BROWSER_CHANNEL=msedge`。这些路径只放本地环境变量，不写入仓库。未提供这些测试工具时，该专项不能运行。
 
-## 本批证据
+截图和结果位于忽略目录 `web/.agentdesk/interaction-evidence/`；临时测试数据库与令牌不提交。确定性执行器只验证工作流，不证明真实模型能力。
 
-2026-10-08（Asia/Shanghai），Windows / Codex 0.154.0：HTTP 模式下文本、文件 diff、上下文、重启恢复、执行中补充与中止、文件审批接受/拒绝、两个工作区并行修改均已在分阶段运行中通过。Linux 尚未实测。默认上游路径出现错误/超时，默认模型的后续阶段曾返回 `usageLimitExceeded`；详见 [真实验证矩阵](docs/CODEX-BATCH-01-RESULTS.md)。
+## 连接真实后端
 
-## 后续步骤
+1. 准备一个已有提交且干净的 Git 仓库，以及独立的任务工作区根目录。两者不能重叠，也不能与 AgentDesk 仓库重叠。
+2. 在仓库根创建 `.agentdesk`，复制 `config.example.json` 为 `.agentdesk/local-backend.json`，填写全部占位符。JSON 路径使用正斜杠或双反斜杠；可用 `node -p "process.execPath"` 查询 Node 路径。
+3. 在仓库根运行：
 
-第 3 批后端链路已完成。下一批可由 Claude 按公共客户端接任务切换、准备工作区及检查状态；真实模型、浏览器和 Linux 验证需另行安排，不能把替身链路当作这些能力的验收。集成与工作区恢复/回收需独立规划，不自动启动下一批。
+```powershell
+npm run serve -- --config .agentdesk/local-backend.json
+```
 
-## 新聊天接手
+终端显示实际 API 地址和访问令牌文件的位置。将地址和令牌填入前端连接页。启动本身不执行模型；明确开始任务才会执行，因此真实执行还需可用且已登录的 Codex CLI。
 
-先阅读 [项目交接说明](docs/HANDOFF.md)，再执行当前批次。
+数据库必须位于本仓库忽略的 `.agentdesk` 内；相对路径按当前工作目录解释，因此上述命令必须从根目录运行。端口冲突应修改配置。`allowedOrigins` 必须匹配实际前端来源，不带末尾斜杠。
+
+示例的 Node 版本检查只证明命令可执行。请把检查预设换成目标项目实际的测试命令，使用可执行文件及参数数组；Windows 不支持 `.cmd`/`.bat` 检查预设，不依赖 shell 通配符展开。未提交源码不会自动进入任务 worktree；开发中脏仓库的额外授权见 [B06 接口](docs/BACKEND-BATCH-06-API.md)。
+
+## 开发验证与项目记录
+
+- 后端回归：根目录 `npm test`。包含真实临时 Git/SQLite/HTTP/子进程与协议替身，不调用真实模型。
+- 后端严格类型：`npm run typecheck`。当前没有自动安装后端编译工具，需要已有 TypeScript 与 `@types/node`；设置 `TYPESCRIPT_PATH` 指向 `typescript.js`、`NODE_TYPES_ROOT` 指向包含 `node` 的 `@types` 目录。
+- 前端测试/类型与构建：`npm --prefix web test`、`npm --prefix web run build`。
+- [首次发布范围与验收](docs/release-scope.md)、[核心架构](docs/architecture.md)、[本轮交付验证](docs/delivery-verification.md)。
+- [历史交接](docs/HANDOFF.md) 保留原型过程；其旧路径、测试数量和未来计划应结合当前记录阅读。
+
+不提交令牌、私人配置、运行数据库、原始敏感日志或依赖目录。Git worktree 提供代码隔离，不是安全沙箱。目前未推送或公开发布；许可证和真实 Codex 主线验收仍需发布前明确处理。

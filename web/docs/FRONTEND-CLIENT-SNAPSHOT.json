@@ -1,7 +1,7 @@
 {
-  "batch": "B08a / F04",
-  "date": "2026-10-09",
-  "snapshot": ".agentdesk/f04-b08a-backend",
+  "batch": "B08b / F04 delivery",
+  "date": "2026-10-12",
+  "snapshot": "../src (current checkout)",
   "files": [
     {
       "path": "src/v2/api/client/api.ts",
@@ -13,7 +13,7 @@
     },
     {
       "path": "src/v2/api/backend/types.ts",
-      "sha256": "A2A87AF620D2547D167DDC509B6727AA0E453ECB241245DD90B239D54C055700"
+      "sha256": "F4A58760CE0E644C146B141A3CAF6CFD940C1C84ABE8B2729B269F18139417A9"
     }
   ]
 }

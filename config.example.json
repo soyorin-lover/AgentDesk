@@ -1,0 +1,20 @@
+{
+  "projects": [
+    { "id": "local-project", "name": "本机项目", "path": "<填写已有 Git 仓库的绝对路径>" }
+  ],
+  "workspaceRoot": "<填写独立任务工作区根目录的绝对路径>",
+  "database": ".agentdesk/local-delivery/state.sqlite",
+  "port": 4317,
+  "allowedOrigins": ["http://localhost:5331", "http://127.0.0.1:5331"],
+  "checkPresets": [
+    {
+      "id": "node-runtime",
+      "name": "Node 运行时检查（不是项目测试）",
+      "executable": "<填写 node.exe 或 node 的绝对路径>",
+      "args": ["--version"],
+      "timeoutMs": 5000,
+      "outputBytes": 4096
+    }
+  ],
+  "transport": "default"
+}
