@@ -91,3 +91,24 @@
 下一次的具体方案已准备：同一标题整理需求，全新隔离样例，使用既有 transport=http。该选项临时选择 OpenAI Responses HTTP provider、关闭 WebSocket 支持，并设置 request_max_retries=0、stream_max_retries=0、stream_idle_timeout_ms=15000；不改全局 Codex 配置。此处 HTTP 指 Codex 的上游连接，本机界面/API 此前也一直是 HTTP。其模型侧效果仍需真实验收，不能将元数据预检当作成功证据。
 
 本轮没有修改产品运行代码，未重复全套测试；记录与私有验收辅助脚本已更新。保留两个未知任务的数据库和证据。当前样例定位见忽略目录 .agentdesk/release-demo-current.json；新的 HTTP 样例准备脚本为 .agentdesk/prepare-http-release-demo.mjs，尚未执行。下一次真实调用仍需用户明确重试授权，不利用剩余轮次数量偷偷换任务或重试。
+
+
+## P4 第三次隔离验收：HTTP 两轮真实执行通过，等待人工审阅
+
+2026-10-12 用户明确允许全新隔离样例的 HTTP 验收，最多首次执行和一次同会话反馈。使用既有 transport=http，临时 provider 配置关闭 WebSocket 并设置请求/流重试为 0；没有改全局 Codex 配置。独立示例基线为 fef560182460687ddc61b7496cb4d3e978ee7f2f。
+
+启动辅助脚本第一次在提交模型任务前退出，submittedTurns=0、无任务；原始失败报告保留。后续单独检查 Git、服务启动、认证读取及执行绑定均通过，未确定最初的具体错误。继续使用同一尚无任务的样例执行已授权验收，没有重发模型请求，也未覆盖该失败报告。
+
+| 核对 | 实际结果 |
+| --- | --- |
+| 首次执行 | succeeded；只改标题函数及测试，空标题返回“未命名任务”；独立输入断言通过，配置的 Node 测试 5/5、exitCode=0 |
+| 追加需求 | succeeded；把标题内部连续空白合为普通空格，保留首尾整理及空标题规则；独立英文/中文/Tab/换行断言通过，Node 测试 7/7、exitCode=0 |
+| 会话归属 | 同一任务、同一原生会话、两个不同 nativeTurnId，未另开线程冒充续接 |
+| 成果与检查 | 两次 Diff 快照均 complete，仅两个指定文件；对应检查 passed/current，输出未截断 |
+| 隔离与接受 | 源示例仓库干净、HEAD 保持基线；worktree 未提交；acceptance=not_accepted |
+
+这一结果证明本机 Windows 上，正式 HTTP API 的保存/批准/任务关联/worktree/真实 Codex 首次执行/同会话反馈/Diff/检查链路通过。配置模型为 gpt-6-astra，但 ModelEvidence 仍为 unknown/thread_configuration；不将其写成实际物理模型证明。此前两个未知任务及数据库保持原样。
+
+本轮没有修改产品运行代码或重复全套测试。私有完整证据在当前 .agentdesk/release-demo/ 样例目录的 real-report-http.json、phase-1.json、phase-2.json、final.diff；最初启动失败另存 real-report.json，不能混淆。人工接受、集成、许可证与 GitHub 发布尚未完成。用户只授权执行，尚未据此记录其已经理解代码或亲自通过验收。
+
+持久化界面复核：关闭执行服务后，重新打开同一数据库与真实前端，读到了两轮输入/回复、2 个变更、执行完成、当前版本检查通过和尚未接受；页面错误 0，没有点击执行或接受、没有新增模型调用。首次浏览器脚本等待了错误的状态文案而超时，改用实际最终回复定位后通过；未修改产品。截图 review-workbench.png 保存在本地忽略目录。
