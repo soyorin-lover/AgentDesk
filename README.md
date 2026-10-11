@@ -8,7 +8,7 @@
 
 - 已有源码：项目与任务、计划修订与批准、固定执行绑定、独立 Git worktree、执行反馈、事件补读、Diff 快照、有界检查与人工接受。
 - 反馈必须续接原任务会话；执行成功、检查通过、接受和集成是不同状态。接受不自动合并代码，也不强制检查通过。
-- Codex 有历史真实调用证据，本轮未重新执行真实模型验收。Claude 有适配和模拟测试，尚无真实模型验收；DeepSeek 为规划。
+- 本交付副本已在 Windows 隔离示例上完成真实 Codex 首次执行、同会话反馈、Diff、当前检查和用户接受；两轮检查分别 5/5、7/7。Claude 有适配和模拟测试，尚无真实模型验收；DeepSeek 为规划。
 - 首次发布不包含完整并行、自动交接、自动集成、桌面安装与真实 AI 策划。Linux 尚未验收。
 - 示例预览、确定性 HTTP 测试环境和真实模型执行有明确区分。
 
@@ -48,6 +48,8 @@ npm --prefix web run dev -- --host 127.0.0.1 --port 5331 --strictPort
 npm run serve -- --config .agentdesk/local-backend.json
 ```
 
+示例采用本轮验证通过的 `transport: "http"`：临时使用 Codex 上游 HTTP 连接，禁用请求/流重试，不修改全局 Codex 配置；这不意味着所有网络环境都已验收。
+
 终端显示实际 API 地址和访问令牌文件的位置。将地址和令牌填入前端连接页。启动本身不执行模型；明确开始任务才会执行，因此真实执行还需可用且已登录的 Codex CLI。
 
 数据库必须位于本仓库忽略的 `.agentdesk` 内；相对路径按当前工作目录解释，因此上述命令必须从根目录运行。端口冲突应修改配置。`allowedOrigins` 必须匹配实际前端来源，不带末尾斜杠。
@@ -62,4 +64,4 @@ npm run serve -- --config .agentdesk/local-backend.json
 - [首次发布范围与验收](docs/release-scope.md)、[核心架构](docs/architecture.md)、[本轮交付验证](docs/delivery-verification.md)。
 - [历史交接](docs/HANDOFF.md) 保留原型过程；其旧路径、测试数量和未来计划应结合当前记录阅读。
 
-不提交令牌、私人配置、运行数据库、原始敏感日志或依赖目录。Git worktree 提供代码隔离，不是安全沙箱。目前未推送或公开发布；许可证和真实 Codex 主线验收仍需发布前明确处理。
+不提交令牌、私人配置、运行数据库、原始敏感日志或依赖目录。Git worktree 提供代码隔离，不是安全沙箱。项目代码采用 [MIT 许可证](LICENSE)；第三方图标及依赖保留各自许可，见 [来源与依赖说明](THIRD_PARTY_NOTICES.md)。真实 Codex 验收范围见 [交付记录](docs/delivery-verification.md)。目前未推送或公开发布；用户选择暂不发布，Git 历史中的个人作者邮箱仍待发布前处理。
