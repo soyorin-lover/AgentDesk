@@ -1,3 +1,4 @@
+> 2026-10-12 最新交付：用户明确授权后已公开 [soyorin-lover/AgentDesk](https://github.com/soyorin-lover/AgentDesk)，main 推送及匿名远端复核通过，MIT 已识别。作者邮箱已替换为 GitHub 隐私邮箱，原始历史 bundle 仅在本地忽略目录；下方旧哈希为历史证据标识。P4 源码公开完成，下一阶段为基于实际证据的求职案例整理；未发布安装包、未扩展功能。详见 [验证记录末节](delivery-verification.md)。
 > 2026-10-12 发布授权更新：用户要求公开发布并选择 GitHub 隐私邮箱。原始 14 提交已本地 bundle 备份，公开历史邮箱替换且 tree/说明/姓名/日期/父子关系复核一致；旧哈希映射只存忽略目录。目标 soyorin-lover/AgentDesk，创建和推送结果待复核。本条取代下方暂不发布的旧决定，不授权追加模型或功能开发。
 > 2026-10-12 开源收尾：用户选择 MIT，LICENSE/第三方来源说明已加入，README 与 HTTP 示例同步真实验收；公开文件/历史常见凭据模式检查及 CLI 3/3 通过。作者个人邮箱仍在 Git 历史中，用户选择暂不发布、稍后决定；不改写历史或自动公开。详见 [验证记录末节](delivery-verification.md)。
 > 2026-10-12 最新状态：用户审阅具体行为与检查后回复“可以”，已通过正式 API 接受最终示例快照；服务重启后任务 accepted、acceptance=valid。接受前内容摘要和 passed/current 检查复核通过，源仓库未动，0 新模型调用。真实 Windows 示例主线闭环完成；未集成、推送或公开。下一步为许可证/素材来源和公开文件最终复核，详见 [验证记录末节](delivery-verification.md)。

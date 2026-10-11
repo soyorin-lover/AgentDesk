@@ -1,5 +1,7 @@
 # AgentDesk
 
+源码：[soyorin-lover/AgentDesk](https://github.com/soyorin-lover/AgentDesk)。当前公开版本为 Windows 本机原型，已验证范围与限制见下文。
+
 本机 Coding Agent 工作台原型：把已有 Git 仓库中的任务拆成可批准的计划，在独立 worktree 中执行，查看事件和 Diff，运行检查后人工接受成果。
 
 当前整理目标是 **Windows、本机、单用户、串行、Codex** 首个公开版本。项目由 AI 辅助原型开发而来；从工程化整理开始记录新的阅读、判断、修改与验证，不把历史 AI 报告等同于本轮验收。
