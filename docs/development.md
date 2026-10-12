@@ -34,7 +34,7 @@ docs/           当前指南与静态设计资源
 
 浏览器专项需已有 Playwright 和 Chromium；默认导入 playwright，外部安装可设 PLAYWRIGHT_MODULE_PATH 指向 index.mjs。Windows 已有 Edge 可设 PLAYWRIGHT_BROWSER_CHANNEL=msedge。工具未配置时该项不能运行。
 
-verify:web 创建并关闭自己的服务与浏览器，结果在忽略目录 `web/.agentdesk/interaction-evidence/`。不能终止别人的服务。历史 F01/F02/F03/F04 编辑和浏览器脚本可能含旧路径/私有快照，不是受维护入口。
+verify:web 创建并关闭自己的服务与浏览器，结果在忽略目录 `web/.agentdesk/interaction-evidence/`。不能终止别人的服务。保留的历史 F01/F02/F03/F04 浏览器及 fixture 验证器包含独立断言，例如请求断线后的幂等键保留、旧绑定任务读取；它们不是默认维护入口，运行前需核对环境与路径。F01/F02 fixture 可用 AGENTDESK_BACKEND_ROOT 指向当前后端目录。一次性源码编辑器与无断言的临时探针已删除。
 
 verify:codex 等真实协议验证入口先阅读源码并明确调用范围；不能把含 verify 的命令一律当成零模型测试。
 
